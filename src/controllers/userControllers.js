@@ -8,7 +8,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const fs = require('fs');
 const path = require('path');
 const followService = require('../helpers/followService');
-const validate = require ('../helpers/validate');
+const validate = require('../helpers/validate');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId; // Define correctamente ObjectId
 
@@ -92,10 +92,10 @@ const registrarUser = async (req, res) => {
             message: "Faltan datos por enviar",
         });
     }
-        console.log('params', params);
-    try{
+    console.log('params', params);
+    try {
         validate(params);
-    }catch(error){
+    } catch (error) {
         return res.status(400).json({
             status: "error",
             message: "Valición no superada",
@@ -126,13 +126,6 @@ const registrarUser = async (req, res) => {
         // Guardar usuario en la bbdd
         user_to_save.save().then((userStored) => {
             if (!userStored) return res.status(500).send({ status: "error", "message": "Error al guardar el ususario" });
-
-            // añadido
-            // userStored.toObject();
-            // delete userStored.password;
-            // delete userStored.role;
-
-            // Devolver resultado
             return res.status(200).json({
                 status: "success",
                 message: "Usuario registrado correctamente",
@@ -182,12 +175,9 @@ const login = async (req, res) => {
     } catch (error) {
 
     };
-
-
-
 };
 
-const getUser  = async (req, res) => {
+const getUser = async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -199,12 +189,9 @@ const getUser  = async (req, res) => {
             });
         }
 
-        const followInfo = await followService.followThisUser (req.user.id, id);
-        
-        // Llamar a la función de contadores
-        // const countersInfo = await counters(req, res); // Asegúrate de que esta función retorne los datos correctamente
+        const followInfo = await followService.followThisUser(req.user.id, id);
 
-        return res.status(200).send({
+            return res.status(200).send({
             status: "success",
             usuario,
             following: followInfo.following,
@@ -233,7 +220,7 @@ const list = async (req, res) => {
 
         // Realizar la consulta con mongoose paginate
         const result = await User.paginate({}, {
-            
+
             select: "-password -email -role -__v",
             sort: { _id: 1 },
             page,
@@ -296,7 +283,7 @@ const update = (req, res) => {
                 status: "success",
                 message: "El usuario ya existe"
             });
-        }else{
+        } else {
             delete userToUpdate.password
         }
 
@@ -372,7 +359,6 @@ const avatar = (req, res) => {
                 message: "No existe la imagen"
             });
         }
-
         // Enviar el archivo si existe
         return res.sendFile(path.resolve(filePath));
     });
@@ -386,7 +372,7 @@ const counters = async (req, res) => {
         const followingCount = await Follow.countDocuments({ user: userId });
         const followersCount = await Follow.countDocuments({ followed: userId });
         const publicationsCount = await Publication.countDocuments({ user: userId });
-        
+
         const totalLikesCount = await Publication.aggregate([
             { $match: { user: userId } },
             { $unwind: '$likes' },

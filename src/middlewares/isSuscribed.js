@@ -1,4 +1,4 @@
-const Follow = require ('../models/followModels');
+const Follow = require('../models/followModels');
 exports.isSubscribed = async (req, res, next) => {
     const userId = req.user.id;
     const profileId = req.params.id;

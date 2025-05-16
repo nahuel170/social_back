@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const followService = require('../helpers/followService');
 const { getIO } = require('../sockets'); // (SOCKET.IO) Importar la instancia de socket
-const User = require('../models/userModels'); 
+const User = require('../models/userModels');
 
 const save = async (req, res) => {
     const params = req.body;
@@ -320,8 +320,8 @@ const unlike = async (req, res) => {
             authorId: publication.user.toString()
         });
 
-          // Calcular el top 10 de usuarios (igual que en la función like)
-          const topUsers = await Publication.aggregate([
+        // Calcular el top 10 de usuarios (igual que en la función like)
+        const topUsers = await Publication.aggregate([
             { $unwind: "$likes" },
             { $group: { _id: "$user", totalLikes: { $sum: 1 } } },
             { $sort: { totalLikes: -1 } },
@@ -357,4 +357,3 @@ module.exports = {
     like,
     unlike
 }
-

@@ -1,15 +1,10 @@
-// src/sockets.js
 const { Server } = require('socket.io');
 
-let io; // Variable para almacenar la instancia de Socket.io
+let io;
 
-/**
- * Inicializa Socket.io con el servidor HTTP que ya levantaste en index.js
- */
 function init(server) {
   io = new Server(server, {
     cors: {
-      // Cambia esto a la URL de tu front si quieres restringirlo
       origin: '*',
     },
   });
